@@ -1,19 +1,50 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome, Melissa, to Your Vue.js App"/>
+    <Header :fillSearchResults="fillSearchResults" />
+    <Body :searchResults="searchResults" />
+    <Footer />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+  import Header from './components/Header.vue'
+  import Footer from './components/Footer.vue'
+  import Body from './components/Body.vue'
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  export default {
+    name: 'App',
+    components: {
+      Footer,
+      Header,
+      Body,
+    },
+    methods: {
+      fillSearchResults(term) {
+        if (term.length > 0) {
+        this.searchResults = this.startingData.filter(d => d.img.includes(term))
+        } else this.searchResults = []
+      }
+    },
+    data() {
+      return {
+        startingData: [
+          {
+            img: 'silvana0.jpg'
+          },
+          {
+            img: 'silvana1.jpg'
+          },
+          {
+            img: 'silvana2.jpg'
+          },
+          {
+            img: 'deanna.jpg'
+          },
+        ],
+        searchResults: [],
+      };
+    }
   }
-}
 </script>
 
 <style>
@@ -21,8 +52,7 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  margin-top: 8px;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
