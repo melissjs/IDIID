@@ -2,14 +2,6 @@
   <v-app>
     <!-- side navbar -->
     <v-navigation-drawer app temporary fixed v-model='menuSide'>
-      <!-- <v-toolbar fixed color='accent' dark flat>
-        <v-app-bar-nav-icon @click='toggleMenuSide' class='float-right'></v-app-bar-nav-icon>
-        <router-link to='/' custom v-slot="{ isActive }" style='cursor: pointer'> 
-          <span @click="isActive" @keypress.enter="isActive" role="button">
-            title
-          </span>
-        </router-link>
-      </v-toolbar> -->
       <v-toolbar dark>
             <v-spacer></v-spacer>
             <v-btn icon>
