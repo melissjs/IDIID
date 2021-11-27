@@ -3,15 +3,33 @@
     <!-- side navbar -->
     <v-navigation-drawer app temporary fixed v-model='menuSide'>
       <v-toolbar dark>
-            <v-spacer></v-spacer>
-            <v-btn icon>
-              <v-icon @click='toggleMenuSide'>mdi-close</v-icon>
-            </v-btn>
-          </v-toolbar>
+        <router-link to='/' custom v-slot="{ navigate }" style='cursor: pointer'> 
+          <span @click="navigate" @keypress.enter="navigate" role="link">
+            INTERFACE<span class='font-weight-bold'>DISTRICT</span>
+          </span>
+        </router-link>
+        <v-spacer></v-spacer>
+          <v-btn icon>
+            <v-icon @click='toggleMenuSide'>mdi-close</v-icon>
+          </v-btn>
+      </v-toolbar>
+      <v-divider></v-divider>
+      <v-list>
+        <v-list-item v-for='item in menuSideItems' :key='item.title' :to='item.link'>
+          <v-list-item-action>
+            <v-icon left>
+              {{item.icon}}
+            </v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            {{item.title}}
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
     </v-navigation-drawer>
 
     <!-- horizontal navbar -->
-    <v-toolbar fixed color='secondary' dark>
+    <v-app-bar fixed color='secondary' dark>
       <v-app-bar-nav-icon @click='toggleMenuSide'></v-app-bar-nav-icon>
       <v-toolbar-title class='hidden-xs-only'>
         <router-link to='/' custom v-slot="{ navigate }" style='cursor: pointer'> 
@@ -40,23 +58,15 @@
           {{item.title}}
         </v-btn>
       </v-toolbar-items>
-    </v-toolbar>
+    </v-app-bar>
 
     <!-- main -->
     <main>
       <v-container class='mt-4'>
-        <!-- <router-view>
-
-        </router-view> -->
+        <router-view></router-view>
       </v-container>
     </main>
 
-    <!-- was here before -->
-    <!-- <div id='app'>
-      <Header :fillSearchResults="fillSearchResults" />
-      <Body :searchResults="searchResults" />
-      <Footer />
-    </div> -->
   </v-app>
 </template>
 
@@ -75,6 +85,13 @@
           { icon: 'mdi-account-lock-open', title: 'Sign in', link: '/signin'},
           { icon: 'mdi-account-edit', title: 'Sign Up', link: '/signup'}
         ]
+      },
+      menuSideItems() {
+        return [
+          { icon: 'mdi-card-multiple', title: 'Posts', link: '/posts'},
+          { icon: 'mdi-account-lock-open', title: 'Sign in', link: '/signin'},
+          { icon: 'mdi-account-edit', title: 'Sign Up', link: '/signup'}
+        ]
       }
     },
     methods: {
@@ -87,10 +104,10 @@
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin-top: 8px;
-  color: #2c3e50;
+  color: #2c3e50; */
 }
 </style>
