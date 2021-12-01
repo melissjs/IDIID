@@ -62,8 +62,10 @@
 
     <!-- main -->
     <main>
-      <v-container class='mt-4'>
-        <router-view></router-view>
+      <v-container class='mt-14'>
+        <transition name='fade'>
+          <router-view />
+        </transition>
       </v-container>
     </main>
 
@@ -103,11 +105,19 @@
 </script>
 
 <style>
-#app {
-  /* font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  margin-top: 8px;
-  color: #2c3e50; */
+.fade-enter-active,
+.fade-leave-active {
+  transition-property: all;
+  transition-duration: 0.25s;
+}
+
+.fade-enter-active {
+  transition-delay: 0.25s;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+  transform: translateX(-25px);
 }
 </style>
