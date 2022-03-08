@@ -6,6 +6,10 @@ import vuetify from './plugins/vuetify/vuetify.js'
 import router from './router'
 import App from './App.vue'
 import store from './store'
+import FormAlert from './components/Shared/FormAlert'
+
+// register global component to use anywhere
+Vue.component('form-alert', FormAlert)
 
 Vue.use(VueApollo)
 

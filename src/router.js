@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import AuthGuard from './AuthGuard'
 
 Vue.use(VueRouter)
  
@@ -35,6 +36,7 @@ export default new VueRouter({
       path: '/profile',
       name: 'Profile',
       component: () => import('./components/Auth/Profile.vue'),
+      beforeEnter: AuthGuard,
     }
   ]
 })

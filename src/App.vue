@@ -25,6 +25,14 @@
             {{item.title}}
           </v-list-item-content>
         </v-list-item>
+        <v-list-item v-if="user" @click="handleSignoutUser">
+          <v-list-item-action>
+            <v-icon left>mdi-logout</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+          Signout
+        </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
@@ -57,6 +65,17 @@
           </v-icon>
           {{item.title}}
         </v-btn>
+        <v-btn text to="/profile" v-if="user">
+          <v-icon class="hidden-sm-only" left>mdi-account</v-icon>
+          <v-badge right color="blue darken-2">
+            <span slot="badge">1</span>
+            Profile
+          </v-badge>
+        </v-btn>
+        <v-btn text v-if="user" @click="handleSignoutUser">
+          <v-icon class="hidden-sm-only" left>mdi-logout</v-icon>
+          Signout
+        </v-btn>
       </v-toolbar-items>
     </v-app-bar>
 
@@ -66,6 +85,13 @@
         <transition name='fade'>
           <router-view />
         </transition>
+        <v-snackbar v-model="authSnackbar" color="success" :timeout='5000' bottom right>
+          <v-icon class="mr-3">mdi-check-circle</v-icon>
+          <span>You are now signed in!</span>
+          <v-btn right absolute dark text @click="authSnackbar = false">
+            <v-icon class="mr-3">mdi-close</v-icon>
+          </v-btn>
+        </v-snackbar>
       </v-container>
     </main>
 
@@ -73,30 +99,60 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
     name: 'app',
     data() {
       return {
         menuSide: false,
+        authSnackbar: false,
+      }
+    },
+    watch: {
+      user(newValue, oldValue) {
+        if (oldValue === null) {
+          this.authSnackbar = true
+        }
       }
     },
     computed: {
+      ...mapGetters(['user']),
       menuMain() {
-        return [
+        let items = [
           { icon: 'mdi-card-multiple', title: 'Posts', link: '/posts'},
           { icon: 'mdi-account-lock-open', title: 'Sign in', link: '/signin'},
           { icon: 'mdi-account-edit', title: 'Sign Up', link: '/signup'}
         ]
+        if (this.user) {
+          items = [
+            { icon: 'mdi-card-multiple', title: 'Posts', link: '/posts'},
+            // { icon: 'mdi-stars', title: 'Create Post', link: '/post/add'},
+            // { icon: 'mdi-account', title: 'Profile', link: '/profile'}
+          ]
+        }
+        return items
       },
       menuSideItems() {
-        return [
+        let items = [
           { icon: 'mdi-card-multiple', title: 'Posts', link: '/posts'},
           { icon: 'mdi-account-lock-open', title: 'Sign in', link: '/signin'},
           { icon: 'mdi-account-edit', title: 'Sign Up', link: '/signup'}
         ]
+        if (this.user) {
+          items = [
+            { icon: 'mdi-card-multiple', title: 'Posts', link: '/posts'},
+            { icon: 'mdi-stars', title: 'Create Post', link: '/post/add'},
+            { icon: 'mdi-account', title: 'Profile', link: '/profile'}
+          ]
+        }
+        return items
       }
     },
     methods: {
+      handleSignoutUser() {
+        this.$store.dispatch('signoutUser')
+      },
       toggleMenuSide() {
         this.menuSide = !this.menuSide
       }

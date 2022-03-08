@@ -4,6 +4,7 @@ import { defaultClient as apolloClient } from './main'
 import router from './router'
 import {
   GET_CURRENT_USER,
+  SIGNOUT_USER,
   SIGNIN_USER,
   SIGNUP_USER,
   GET_POSTS,
@@ -16,6 +17,7 @@ export default new Vuex.Store({
     posts: [],
     user: null,
     loading: false,
+    error: null,
   },
   mutations: {
     setPosts: (state, payload) => {
@@ -26,7 +28,12 @@ export default new Vuex.Store({
     },
     setLoading: (state, payload) => {
       state.loading = payload
-    }
+    },
+    clearUser: state => (state.user = null),
+    clearError: state => (state.error = null),
+    setError: (state, payload) => {
+      state.error = payload
+    },
   },
   actions: {
     getCurrentUser: ({ commit }) => {
@@ -59,23 +66,36 @@ export default new Vuex.Store({
         })
     },
     signinUser: ({ commit }, payload) => {
+      commit('clearError')
+      commit('setLoading', true)
+      localStorage.setItem('token', '')
       apolloClient
         .mutate({
           mutation: SIGNIN_USER,
           variables: payload
         })
         .then(({ data }) => {
+          commit('setLoading', false)
           localStorage.setItem('token', data.signinUser.token)
           router.go()
         })
         .catch(err => {
+          commit('setLoading', false)
+          commit('setError', err)
           console.error(err)
         })
+    },
+    signoutUser: async ({ commit }) => {
+      commit('clearUser')
+      localStorage.setItem('token', '')
+      await apolloClient.resetStore()
+      router.push('/')
     }
   },
   getters: {
     loading: state => state.loading,
     posts: state => state.posts,
     user: state => state.user,
+    error: state => state.error,
   }
 })

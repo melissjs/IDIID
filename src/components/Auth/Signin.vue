@@ -6,15 +6,24 @@
       </v-flex>
     </v-layout>
 
+    <!-- error alert -->
+    <v-layout v-if="error" row wrap>
+      <v-flex xs12 sm6 offset-sm3>
+        <form-alert :message="error.message"></form-alert>
+      </v-flex>
+    </v-layout>
+
+    <!-- signin form -->
     <v-layout row wrap>
       <v-flex xs12 sm6 offset-sm3>
         <v-card>
           <v-container>
-            <v-form @submit.prevent='handleSigninUser'>
+            <v-form v-model="isFormValid" lazy-validation ref="form" @submit.prevent='handleSigninUser'>
               <v-layout row>
                 <v-flex xs12>
                   <v-text-field
                     prepend-icon='mdi-account'
+                    :rules="usernameRules"
                     v-model='username'
                     label='Username'
                     type='text'
@@ -27,6 +36,7 @@
                 <v-flex xs12>
                   <v-text-field
                     prepend-icon='mdi-lock'
+                    :rules="passwordRules"
                     v-model='password'
                     label='Password'
                     type='password'
@@ -37,7 +47,10 @@
               </v-layout>
               <v-layout row>
                 <v-flex xs12>
-                  <v-btn color='accent' type='submit'>
+                  <v-btn :loading="loading" :disabled="!isFormValid" color='accent' type='submit'>
+                    <span slot="loader" class="custom-loader">
+                      <v-icon light>mdi-cached</v-icon>
+                    </span>
                     Signin
                   </v-btn>
                   <h5>
@@ -65,10 +78,19 @@ export default {
     return {
       username: '',
       password: '',
+      isFormValid: true,
+      usernameRules: [
+        username => !! username || 'Username is required',
+        username => username.length < 10 || 'Username must be less than 10 characters',
+      ],
+      passwordRules: [
+        password => !! password || 'Password is required',
+        password => password.length < 7 || 'Password must be less than 7 characters',
+      ],
     }
   },
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['loading', 'user', 'error'])
   },
   watch: {
     user(value) {
@@ -79,11 +101,52 @@ export default {
   },
   methods: {
     handleSigninUser() {
-      this.$store.dispatch('signinUser', {
-        username: this.username,
-        password: this.password,
-      })
+      if (this.$refs.form.validate()) {
+        this.$store.dispatch('signinUser', {
+          username: this.username,
+          password: this.password,
+        })
+      }
     }
   }
 }
 </script>
+
+<style>
+  .custom-loader {
+    animation: loader 1s infinite;
+    display: flex;
+  }
+  @-moz-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-o-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
