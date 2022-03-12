@@ -18,6 +18,7 @@ export default new Vuex.Store({
     user: null,
     loading: false,
     error: null,
+    authError: null,
   },
   mutations: {
     setPosts: (state, payload) => {
@@ -29,11 +30,14 @@ export default new Vuex.Store({
     setLoading: (state, payload) => {
       state.loading = payload
     },
-    clearUser: state => (state.user = null),
-    clearError: state => (state.error = null),
     setError: (state, payload) => {
       state.error = payload
     },
+    setAuthError: (state, payload) => {
+      state.authError = payload
+    },
+    clearUser: state => (state.user = null),
+    clearError: state => (state.error = null),
   },
   actions: {
     getCurrentUser: ({ commit }) => {
@@ -65,10 +69,30 @@ export default new Vuex.Store({
           console.log('ERROR', err)
         })
     },
+    signupUser: ({ commit }, payload) => {
+      commit('clearError')
+      commit('setLoading', true)
+      // localStorage.setItem('token', '')
+      apolloClient
+        .mutate({
+          mutation: SIGNUP_USER,
+          variables: payload
+        })
+        .then(({ data }) => {
+          commit('setLoading', false)
+          localStorage.setItem('token', data.signupUser.token)
+          router.go()
+        })
+        .catch(err => {
+          commit('setLoading', false)
+          commit('setError', err)
+          console.error(err)
+        })
+    },
     signinUser: ({ commit }, payload) => {
       commit('clearError')
       commit('setLoading', true)
-      localStorage.setItem('token', '')
+      // localStorage.setItem('token', '')
       apolloClient
         .mutate({
           mutation: SIGNIN_USER,
@@ -97,5 +121,6 @@ export default new Vuex.Store({
     posts: state => state.posts,
     user: state => state.user,
     error: state => state.error,
+    authError: state => state.authError,
   }
 })

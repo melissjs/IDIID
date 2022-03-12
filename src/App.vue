@@ -92,6 +92,11 @@
             <v-icon class="mr-3">mdi-close</v-icon>
           </v-btn>
         </v-snackbar>
+        <v-snackbar v-if="authError" v-model="authErrorSnackbar" color="info" :timeout='5000' bottom right>
+          <v-icon class="mr-3">mdi-cancel</v-icon>
+          <span>{{authError.message}}</span>
+          <v-btn right absolute dark text to="/signin">Signin</v-btn>
+        </v-snackbar>
       </v-container>
     </main>
 
@@ -107,6 +112,7 @@
       return {
         menuSide: false,
         authSnackbar: false,
+        authErrorSnackbar: false,
       }
     },
     watch: {
@@ -114,10 +120,15 @@
         if (oldValue === null) {
           this.authSnackbar = true
         }
-      }
+      },
+      authError(value) {
+        if (value !== null) {
+          this.authErrorSnackbar = true
+        }
+      },
     },
     computed: {
-      ...mapGetters(['user']),
+      ...mapGetters(['user', 'authError']),
       menuMain() {
         let items = [
           { icon: 'mdi-card-multiple', title: 'Posts', link: '/posts'},
