@@ -31,6 +31,7 @@ export default new VueRouter({
       path: '/post/add',
       name: 'AddPost',
       component: () => import('./components/Posts/AddPost.vue'),
+      beforeEnter: AuthGuard,
     },
     {
       path: '/profile',

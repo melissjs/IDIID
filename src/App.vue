@@ -153,7 +153,7 @@
         if (this.user) {
           items = [
             { icon: 'mdi-card-multiple', title: 'Posts', link: '/posts'},
-            { icon: 'mdi-stars', title: 'Create Post', link: '/post/add'},
+            { icon: 'mdi-pencil', title: 'Create Post', link: '/post/add'},
             { icon: 'mdi-account', title: 'Profile', link: '/profile'}
           ]
         }

@@ -10,6 +10,7 @@ export const GET_POSTS = gql`
     }
   }
 `
+
 // user queries
 export const GET_CURRENT_USER = gql`
   query {
@@ -30,6 +31,31 @@ export const GET_CURRENT_USER = gql`
 `
 
 // post mutations
+export const ADD_POST = gql`
+  mutation (
+    $title: String!,
+    $imageUrl: String!,
+    $categories: [String]!,
+    $description: String!,
+    $creatorId: ID!
+  ) {
+    addPost (
+      title: $title,
+      imageUrl: $imageUrl,
+      categories: $categories,
+      description: $description,
+      creatorId: $creatorId
+    ) {
+      _id
+      title
+      imageUrl
+      categories
+      description
+      createdDate
+    }
+  }
+`
+
 // user mutations
 export const SIGNUP_USER = gql`
   mutation($username:String!, $email: String!, $password: String!) {
